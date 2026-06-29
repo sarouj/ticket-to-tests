@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.egg-info/
+.venv/
+venv/
+.env
+deepeval_report.json
+zephyr_responses.json
+zephyr_responses.log
+api_coverage_report.json
+jira_automation_mapping.json
+schemathesis-reports/
+test-results.xml
+/tmp/
