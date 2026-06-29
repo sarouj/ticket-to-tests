@@ -1,0 +1,42 @@
+---
+description: Routes test-authoring and quality-evaluation requests through the ticket-to-tests skill. Always active.
+alwaysApply: true
+---
+
+# ticket-to-tests skill routing
+
+## When to invoke the skill
+
+Apply the `/ticket-to-tests` skill automatically when the user:
+
+- Asks to write, review, extend, or refactor automated tests for any service or feature
+- Mentions a Jira ticket key alongside test writing, test design, or evaluation
+- Asks to sync tests with Zephyr Scale or evaluate test quality
+- Asks to run `evaluate_test_quality.py` or check API coverage
+
+Do not start writing test code until all phases of the skill workflow have been applied
+(or the user explicitly skips specific phases). Named phases: 1, 2, 3, 3b, 4, 5, 5b, 5c, 6, 7, 7b.
+
+## Phase routing rules
+
+| Trigger | Required phase |
+|---|---|
+| User provides a Jira ticket URL or key | Phase 2 via `mcp-atlassian` first — do not skip |
+| Feature modifies an existing endpoint | Phase 3b (feature impact analysis) — after Phase 3, before Phase 5 |
+| User asks to push/export to Zephyr | Always dry-run first; never live-create without explicit confirmation |
+| User asks to evaluate test quality | Run `~/.agents/skills/ticket-to-tests/tools/evaluate_test_quality.py` |
+| User asks to check API coverage | Run `~/.agents/skills/ticket-to-tests/tools/update_api_coverage.py` |
+| User has not specified a target environment | Prompt for `TARGET_ENV` before Phase 3 |
+| Tests run and failures found during Phase 5c | Apply §3j triage; confirm before each Jira bug; annotate SKIP_XFAIL |
+
+## Skill location
+
+> **This skill is language- and framework-agnostic.**
+
+Full skill:        ~/.agents/skills/ticket-to-tests/SKILL.md
+Starter prompts:   ~/.agents/skills/ticket-to-tests/starter-prompts.md
+Sub-agent seeds:   ~/.agents/skills/ticket-to-tests/subagent-prompts.md
+Evaluation rubric: ~/.agents/skills/ticket-to-tests/evaluation-rubric.md
+Adapters:          ~/.agents/skills/ticket-to-tests/ADAPTERS.md
+Domain context:    context/ONBOARDING.md   ← fill from template
+Project config:    team_config.yaml        ← fill from template

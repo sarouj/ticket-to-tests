@@ -1,0 +1,81 @@
+# team_config.yaml
+# Copy this file to your project root and fill in every field.
+# The ticket-to-tests skill reads this file automatically from the working directory.
+# See ~/.agents/skills/ticket-to-tests/docs/config-reference.md for field-by-field docs.
+
+# ---------------------------------------------------------------------------
+# Jira
+# ---------------------------------------------------------------------------
+jira:
+  url: "https://yourorg.atlassian.net"    # Base URL — no trailing slash
+  project_key: "MYPRJ"                    # e.g. TDFS, PLTF, ARCH
+  component: ""                           # Optional: added to every bug/issue filed
+
+# ---------------------------------------------------------------------------
+# Zephyr Scale
+# ---------------------------------------------------------------------------
+zephyr:
+  # Maps @allure.epic (or equivalent test-metadata tag) → Zephyr folder name.
+  epic_folder_map: {}
+  # Uncomment and fill in:
+  # epic_folder_map:
+  #   "API":   "API Tests"
+  #   "AUTH":  "Authentication"
+  #   "UI":    "UI Tests"
+
+# ---------------------------------------------------------------------------
+# Test framework
+# ---------------------------------------------------------------------------
+test_framework:
+  # Supported: pytest | jest | junit | go-test | mocha | rspec
+  name: "pytest"
+  # Command to run tests. Tokens: {test_path}, {flags}
+  runner_cmd: "python -m pytest {test_path} {flags}"
+  # Results format for Zephyr push: junit-xml | tap | json
+  results_format: "junit-xml"
+  # Glob for test file discovery
+  file_pattern: "**/*_test.*"
+  # Jest:   "**/*.spec.ts"
+  # JUnit:  "src/test/**/*Test.java"
+  # Go:     "**/*_test.go"
+
+# ---------------------------------------------------------------------------
+# OpenAPI / API specification
+# ---------------------------------------------------------------------------
+openapi:
+  # Local path to your canonical API spec (OpenAPI 3.x YAML or JSON).
+  spec_path: "docs/openapi.yaml"
+
+# ---------------------------------------------------------------------------
+# Project layout
+# ---------------------------------------------------------------------------
+context_dir: "context/"
+test_dir_root: "tests/"
+# Examples:
+#   "src/__tests__/"       ← Jest / TypeScript
+#   "src/test/"            ← JUnit / Maven
+#   "internal/"            ← Go
+#   "spec/"                ← RSpec
+
+# ---------------------------------------------------------------------------
+# Authentication / environment
+# ---------------------------------------------------------------------------
+auth:
+  description: "Authenticate with your SSO / cloud provider before running tests."
+  env_vars: []
+  # Examples: ["AWS_PROFILE", "API_KEY", "TEST_ENV_TOKEN"]
+  verify_cmd: ""
+  # Examples:
+  #   "aws sts get-caller-identity --profile my-profile"
+  #   "curl -sf -H 'Authorization: Bearer $API_KEY' https://api.example.com/health"
+
+# ---------------------------------------------------------------------------
+# deepeval evaluation (Phase 5b)
+# ---------------------------------------------------------------------------
+deepeval:
+  # Options:
+  #   groq/llama-3.1-70b-versatile        — free tier; set GROQ_API_KEY
+  #   bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0  — AWS Bedrock
+  #   gpt-4o-mini                         — OpenAI; set OPENAI_API_KEY
+  #   ollama/mistral                      — local; NOT for real evaluations
+  default_model: "groq/llama-3.1-70b-versatile"
